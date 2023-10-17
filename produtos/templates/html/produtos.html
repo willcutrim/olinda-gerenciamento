@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Produtos {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Produtos</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Nome</th>
+                            <th>Tamanho</th>
+                            <th>Marca</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Tamanho</th>
+                            <th>Marca</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% for produto in produtos%}
+                        <tr>
+                            <td>{{produto.id}}</td>
+                            <td>{{produto.nome}}</td>
+                            <td>{{produto.tamanho}}</td>
+                            <td>{{produto.marca}}</td>
+                            <td>{{produto.categoria}}</td>
+                            <td>{{produto.preco}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: 'get-produtos',
+            type: 'GET',
+            //dataType: 'json',
+            success: function(response) {
+                if (response.status === 200) {
+                    const produtos = response.produtos;
+                    const produtosDiv = $('#produtos');
+                    
+                    produtos.forEach(function(produto) {
+                        produtosDiv.append(`<p>Nome: ${produto.nome}, Descrição: ${produto.descricao}, Preço: ${produto.preco}</p>`);
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Histórico de vendas {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Histórico de vendas</h6>
+            
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Produtos</th>
+                            <th>QTd. peças</th>
+                            <th>data da venda</th>
+                            <th>Valor da compra</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Produtos</th>
+                            <th>Quantidade</th>
+                            <th>Data da venda</th>
+                            <th>Valor da compra</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% for venda in vendas%}
+                        <tr>
+                            <td>{{venda.id}}</td>
+                            <td>{{venda.produtos_nomes}}</td>
+                            <td>{{venda.quantidade_produtos}}</td>
+                            <td>{{venda.data_compra}}</td>
+                            <td>{{venda.valor_da_compra}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="col-12" style="display: flex; justify-content: space-between">
+                    <div class="row">
+                        <h3>Valor total</h3>
+                    </div>
+                    <div class="row">
+                        <h3>R$: {{calc_list}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: 'get-produtos',
+            type: 'GET',
+            //dataType: 'json',
+            success: function(response) {
+                if (response.status === 200) {
+                    const produtos = response.produtos;
+                    const produtosDiv = $('#produtos');
+                    
+                    produtos.forEach(function(produto) {
+                        produtosDiv.append(`<p>Nome: ${produto.nome}, Descrição: ${produto.descricao}, Preço: ${produto.preco}</p>`);
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+    </script>
+
+{% endblock %}
