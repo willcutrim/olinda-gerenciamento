@@ -4,7 +4,7 @@ from django.db import models
 class Carrinho(models.Model):
     produtos_nomes = models.CharField(max_length=200, blank=True)
     produtos_quantidades = models.CharField(max_length=200, blank=True)
-    produtos_valores = models.CharField(max_length=200, blank=True)  # Adicione este campo
+    produtos_valores = models.CharField(max_length=200, blank=True) 
     valor_da_compra = models.DecimalField(decimal_places=2, max_digits=10, default=0, blank=True)
     quantidade_produtos = models.CharField(max_length=150, null=True)
     data_compra = models.DateTimeField(auto_now_add=True)

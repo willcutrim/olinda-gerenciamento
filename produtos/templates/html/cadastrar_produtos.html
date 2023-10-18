@@ -6,5 +6,67 @@
 <form method="post">{% csrf_token %}
     {% bootstrap_form form %}
     {% bootstrap_button button_type="submit" content="Cadastrar"%}
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCategoryModal">
+        Adicionar Categoria
+    </button>
 </form>
+
+
+<div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryModalLabel">Adicionar Categoria</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control" type="text" placeholder="Categoria" id="categoria-name" required>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="cadastrarCategoria()">Salvar Categoria</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="sweetalert2.all.min.js"></script>
+<script>
+
+    function cadastrarCategoria() {
+       
+        var categoriaName = document.getElementById("categoria-name").value;
+    
+        var data = {
+            'nome_caegoria': categoriaName,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+        };
+    
+        $.ajax({
+            type: 'POST',
+            url: '/create-category/',
+            data: data,
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Registros salvos com sucesso!',
+                    timer: 2000,
+                    showConfirmButton: false,
+                }).then(function() {
+                    location.reload();
+                });
+                $('#addCategoryModal').modal('hide');
+            },
+            error: function(xhr, status, error) {
+                
+                alert('Erro ao cadastrar a categoria: ' + error);
+            }
+        });
+    }
+
+</script>
 {% endblock %}

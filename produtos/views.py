@@ -2,7 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views import View
 from .forms import CategoriaForm, FornecedorForm, ProdutoForm
-from produtos.models import Produto
+from produtos.models import Categoria, Produto
 
 class GetAllProducts(View):
     def get(self, request, *args, **kwargs):
@@ -25,3 +25,15 @@ def cadastro_de_produtos(request):
     else:
         form = ProdutoForm()
     return render(request, 'html/cadastrar_produtos.html', {'form': form})
+
+
+def create_category(request):
+    if request.method == 'POST':
+        nome_categoria = request.POST.get('nome_caegoria')
+        
+        # Create the category in the database (you should handle validation and error checks here)
+        categoria = Categoria.objects.create(nome_caegoria=nome_categoria)
+        
+        return JsonResponse({'message': 'Categoria cadastrada com sucesso!'})
+    else:
+        return JsonResponse({'error': 'Método inválido'}, status=400)

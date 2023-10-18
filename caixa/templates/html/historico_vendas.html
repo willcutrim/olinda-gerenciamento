@@ -42,9 +42,23 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <div class="col-12" style="display: flex; justify-content: space-between">
-                    <div class="row">
-                        <h3>Valor total</h3>
+                <div class="col-12" style="display: flex; justify-content: space-between; align-items: center">
+                    <div class="pagination">
+                        <span class="step-links">
+                            {% if vendas.has_previous %}
+                                <a href="?page=1">&laquo; Pimeiro</a>
+                                <a href="?page={{ vendas.previous_page_number }}">Voltar</a>
+                            {% endif %}
+                            
+                            <span class="current-page">
+                                Página {{ vendas.number }} de {{ vendas.paginator.num_pages }}.
+                            </span>
+                            
+                            {% if vendas.has_next %}
+                                <a href="?page={{ vendas.next_page_number }}">Próximo</a>
+                                <a href="?page={{ vendas.paginator.num_pages }}">Último &raquo;</a>
+                            {% endif %}
+                        </span>
                     </div>
                     <div class="row">
                         <h3>R$: {{calc_list}}</h3>
