@@ -14,7 +14,7 @@ class Fornecedor(models.Model):
         return self.nome_fornecedor
 
 class Produto(models.Model):
-    codigo_de_barras = models.UUIDField(default=uuid.uuid4, unique=True)
+    # codigo_de_barras = models.UUIDField(default=uuid.uuid4, unique=True)
     nome = models.CharField(max_length=100)
     descricao = models.TextField()
     categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)

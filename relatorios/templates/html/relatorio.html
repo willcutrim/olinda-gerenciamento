@@ -4,6 +4,13 @@
 
 {% block content %}
 <div class="container-fluid">
+    <div class="col mb-2">
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'add_relatorio' %}" class="btn btn-primary btn-md">
+                Add relatorio
+            </a>
+        </div>
+    </div>
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Histórico de entradas e saídas</h6>
