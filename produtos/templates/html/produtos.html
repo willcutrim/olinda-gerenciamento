@@ -10,7 +10,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>id</th>
@@ -44,6 +44,23 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if produtos.has_previous %}
+                            <a href="?page=1">&laquo; Pimeiro</a>
+                            <a 1href="?page={{ produtos.previous_page_number }}">Voltar</a>
+                        {% endif %}
+                        
+                        <span class="current-page">
+                            Página {{ produtos.number }} de {{ produtos.paginator.num_pages }}
+                        </span>
+                        
+                        {% if produtos.has_next %}
+                            <a href="?page={{ produtos.next_page_number }}">Próximo</a>
+                            <a href="?page={{ produtos.paginator.num_pages }}">Último &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
             </div>
         </div>
     </div>

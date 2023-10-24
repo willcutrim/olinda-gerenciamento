@@ -1,5 +1,5 @@
 from django.db import models
-
+import uuid
 class Categoria(models.Model):
     nome_caegoria = models.CharField(max_length=150)
     def __str__(self):
@@ -14,7 +14,7 @@ class Fornecedor(models.Model):
         return self.nome_fornecedor
 
 class Produto(models.Model):
-    codigo_de_barras = models.CharField(max_length=150, null=True)
+    codigo_de_barras = models.UUIDField(default=uuid.uuid4, unique=True)
     nome = models.CharField(max_length=100)
     descricao = models.TextField()
     categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)

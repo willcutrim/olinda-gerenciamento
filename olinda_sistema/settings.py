@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # apps
     'caixa',
     'produtos',
+    'relatorios',
 
     # django rest
     'rest_framework',
@@ -115,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 

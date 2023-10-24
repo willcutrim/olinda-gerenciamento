@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Relatórios {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Histórico de entradas e saídas</h6>
+            
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>TIPO</i></th>
+                            <th>DATA</th>
+                            <th>VALOR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data_relatorio in despesas_page %}
+                        <tr>
+                            <td><i class="fas {% if data_relatorio.is_up_arrow %}fa-arrow-up text-success{% else %}fa-arrow-down text-danger{% endif %}"></i></td>
+                            <td>{{data_relatorio.data_saida}}</td>
+                            <td>{{data_relatorio.valor_despesa}}</td>
+                        </tr>
+                        {% endfor %}
+                        {% for data_relatorio in entradas_page %}
+                        <tr>
+                            <td><i class="fas {% if data_relatorio.is_up_arrow %}fa-arrow-up text-success{% else %}fa-arrow-down text-danger{% endif %}"></i></td>
+                            <td>{{data_relatorio.data_compra}}</td>
+                            <td>{{data_relatorio.valor_da_compra}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if despesas_page.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ despesas_page.previous_page_number }}">Voltar</a>
+                        {% endif %}
+                        <span class="current-page">
+                            Página {{ despesas_page.number }} de {{ despesas_page.num_pages }}
+                        </span>
+                        <span class="current-page">{{ despesas_page.number }}</span>
+                        
+                        {% if despesas_page.has_next %}
+                            <a href="?page={{ despesas_page.next_page_number }}">próximo</a>
+                            <a href="?page={{ despesas_page.paginator.num_pages }}">Ultimo &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">ENTRADAS/SAÍDAS</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-pie pt-4">
+                        <canvas id="myPieChart"></canvas>
+                    </div>
+                </div>
+                <hr>
+                <div class="p-2">
+                    Relatório geral de entrada e saída
+                </div>
+            </div>
+        </div>
+       
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Gráfico de comparação</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-bar">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    <hr>
+                    Gráfico de comparação de entrada e saída
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+<script>
+    
+    const url = 'http://localhost:8000/data-relatorio';
+    
+    fetch(url)
+    .then(response => {
+            if (!response.ok) {
+                throw new Error('Não foi possível obter os dados');
+            }
+                return response.json();
+        })
+        .then(data => {
+
+            var ctx = document.getElementById("myPieChart");
+            var myPieChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["ENTRADA", "SAÍDA"],
+                    datasets: [{
+                        data: [data.carrinho, data.saidas],
+                        backgroundColor: ['#1cc88a', '#ff0000'],
+                        hoverBackgroundColor: ['#17a673', '#a51b0b'],
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyFontColor: "#858796",
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        xPadding: 15,
+                        yPadding: 15,
+                        displayColors: false,
+                        caretPadding: 10,
+                    },
+                    legend: {
+                        display: false
+                    },
+                    cutoutPercentage: 80,
+                },
+            });
+
+        })
+        .catch(error => {
+
+            console.error('Erro: ', error);
+        });
+
+
+        
+        const urlRelatorio = 'http://localhost:8000/data-all-relatorio';
+        
+        function fetchDataAndCreateChart() {
+            fetch(urlRelatorio)
+            .then(response => response.json())
+            .then(data => {
+                
+                const ctx = document.getElementById('myChart').getContext('2d');
+                
+                console.log(data)
+                const chartData = {
+                    labels: data.map(item => item.data_saida_formatada), 
+                    datasets: [
+                        {
+                            label: 'ENTRADA',
+                            data: data.map(item => item.valor_despesa),
+                            backgroundColor: '#1cc88a',
+                            borderColor: '#fff',
+                            borderWidth: 1,
+                        },
+                        {
+                            label: 'SAÍDA',
+                            data: data.map(item => item.valor_despesa),
+                            backgroundColor: '#ff0000',
+                            borderColor: '#fff',
+                            borderWidth: 1,
+                        },
+                    ],
+                };
+                
+                const chartOptions = {
+                scales: {
+                    y: {
+                    beginAtZero: true,
+                    },
+                },
+                };
+                
+                new Chart(ctx, {
+                    type: 'bar',  // Pode ser 'bar', 'line', 'pie', etc.
+                    data: chartData,
+                    options: chartOptions,
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao buscar dados:', error);
+            });
+        }
+          
+        fetchDataAndCreateChart();
+</script>
+{% endblock content %}

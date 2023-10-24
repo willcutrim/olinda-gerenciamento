@@ -3,6 +3,8 @@ from django.shortcuts import redirect, render
 from django.views import View
 from .forms import CategoriaForm, FornecedorForm, ProdutoForm
 from produtos.models import Categoria, Produto
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
 
 class GetAllProducts(View):
     def get(self, request, *args, **kwargs):
@@ -12,6 +14,16 @@ class GetAllProducts(View):
     
 def produtos(request):
     produtos = Produto.objects.all()
+    paginator = Paginator(produtos, 10)
+
+    page = request.GET.get('page')
+
+    try:
+        produtos = paginator.get_page(page)
+    except PageNotAnInteger:
+        produtos = paginator.get_page(1)
+    except EmptyPage:
+        produtos = paginator.get_page(paginator.num_pages)
 
     return render(request, 'html/produtos.html', {'produtos': produtos})
 

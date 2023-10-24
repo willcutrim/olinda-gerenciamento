@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block title %}Criar despesa {% endblock %}
+
+{% block content %}
+<form method="post"> {% csrf_token %}
+    {% bootstrap_form form %}
+    {% bootstrap_button button_type="submit" content="Add despesa"%}
+</form>
+    
+{% endblock content %}
