@@ -4,4 +4,4 @@ from .models import Saida
 class SaidaForm(forms.ModelForm):
     class Meta:
         model = Saida
-        fields = '__all__'
+        fields = ('tipo_de_despesa', 'valor_despesa')

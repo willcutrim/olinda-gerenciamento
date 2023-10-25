@@ -1,7 +1,11 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
+from relatorios.models import RelatorioEntradaSaida
 
 class Carrinho(models.Model):
+    status_entrada = models.CharField(max_length=120, default='entrada')
     produtos_nomes = models.CharField(max_length=200, blank=True)
     produtos_quantidades = models.CharField(max_length=200, blank=True)
     produtos_valores = models.CharField(max_length=200, blank=True) 
@@ -45,3 +49,12 @@ class Carrinho(models.Model):
     def __str__(self):
         return self.produtos_nomes
     
+
+@receiver(post_save, sender=Carrinho)
+def create_relatorio_entrada_saida(sender, instance, created, **kwargs):
+    if created:
+        RelatorioEntradaSaida.objects.create(
+            tipo=instance.status_entrada,
+            valor=instance.valor_da_compra,
+            data=instance.data_compra
+        )
