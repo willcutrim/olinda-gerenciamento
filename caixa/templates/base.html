@@ -74,13 +74,21 @@
         </li> {% endcomment %}
     
       <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'historico-vendas' %}" 
-            aria-expanded="true" aria-controls="collapseUtilities">
-            <i class="fas fa-fw fa-calendar"></i>
-            <span style="font-size: 14px">Histórico de Vendas</span>
-        </a>
-    </li> 
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{% url 'historico-vendas' %}" 
+                aria-expanded="true" aria-controls="collapseUtilities">
+                <i class="fas fa-fw fa-calendar"></i>
+                <span style="font-size: 14px">Histórico de Vendas</span>
+            </a>
+        </li> 
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{% url 'caixa' %}" 
+                aria-expanded="true" aria-controls="collapseUtilities">
+                <i class="fas fa-fw fa-calculator fa-2x text-gray-300"></i>
+                <span style="font-size: 14px">Realizar vendas</span>
+            </a>
+        </li> 
 
     {% comment %} <li class="nav-item">
         <a class="nav-link collapsed" href="" 
