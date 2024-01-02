@@ -7,7 +7,7 @@
     <div class="col mb-2">
         <div class="d-flex justify-content-end">
             <a href="{% url 'add_relatorio' %}" class="btn btn-primary btn-md">
-                Add relatorio
+                Adicionar depesa
             </a>
         </div>
     </div>
@@ -21,7 +21,8 @@
                 <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>TIPO</i></th>
+                            <th>ENTRADA <i class="fas fa-arrow-up text-success"></i> - SAIDA <i class="fas fa-arrow-down text-danger"></i></th>
+                            <th>DESCRIÇÃO</th>
                             <th>DATA</th>
                             <th>VALOR</th>
                         </tr>
@@ -30,6 +31,7 @@
                         {% for data_relatorio in logs %}
                         <tr>
                             <td><i class="fas {% if data_relatorio.tipo == 'entrada' %}fa-arrow-up text-success{% else %}fa-arrow-down text-danger{% endif %}"></i></td>
+                            <td>{{data_relatorio.descricao|default:"-----"}}</td>
                             <td>{{data_relatorio.data_log_formatada}}</td>
                             <td>{{data_relatorio.valor}}</td>
                         </tr>
@@ -56,54 +58,16 @@
             </div>
         </div>
     </div>
-    <hr>
-    <div class="row">
-        <div class="col-xl-6 col-lg-6">
-            <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">ENTRADAS/SAÍDAS</h6>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    <div class="chart-pie pt-4">
-                        <canvas id="myPieChart"></canvas>
-                    </div>
-                </div>
-                <hr>
-                <div class="p-2">
-                    Relatório geral de entrada e saída
-                </div>
-            </div>
-        </div>
-       
-        <div class="col-xl-6 col-lg-6">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Gráfico de comparação</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-bar">
-                        <canvas id="myChart"></canvas>
-                    </div>
-                    <hr>
-                    <div class="p-2">
-                        Gráfico de comparação de entrada e saída
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+   
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/chart.js' %}"></script>
     
 <script>
     
-    const url = 'http://localhost:8000/data-relatorio';
-    
+    //const url = 'http://localhost:8000/data-relatorio';
+    /*
     fetch(url)
-    .then(response => {
+    .then(response => {*/
             if (!response.ok) {
                 throw new Error('Não foi possível obter os dados');
             }

@@ -4,10 +4,23 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
+    <div class="card shadow">
+        <div class="card-header d-flex justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">Histórico de vendas</h6>
-            
+            <form method="get">
+                <div class="row">
+                    <div class="col-md-5">
+                        <input type="date" class="form-control" id="data_inicial" name="data_inicial" value="{{ data_inicial }}">
+                    </div>
+                    <div class="col-md-5">
+                        <input type="date" class="form-control" id="data_final" name="data_final" value="{{ data_final }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="btn btn-primary btn-circle"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </form>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -16,18 +29,18 @@
                         <tr>
                             <th>id</th>
                             <th>Produtos</th>
-                            <th>QTd. peças</th>
+                            <th>QTd. de peças</th>
                             <th>data da venda</th>
-                            <th>Valor da compra</th>
+                            <th>Valor da venda</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th>ID</th>
                             <th>Produtos</th>
-                            <th>Quantidade</th>
+                            <th>QTd. de peças</th>
                             <th>Data da venda</th>
-                            <th>Valor da compra</th>
+                            <th>Valor da venda</th>
                         </tr>
                     </tfoot>
                     <tbody>

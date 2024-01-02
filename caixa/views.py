@@ -12,7 +12,6 @@ from produtos.models import Produto
 from rest_framework import status
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from produtos.serializer import PodutoSerializer
 
 
 
@@ -22,30 +21,43 @@ def home(request):
 
 
 def historico_de_vendas(request):
-    vendas = Carrinho.objects.all()
-    
-    total_value = sum(venda.valor_da_compra for venda in vendas)
-    items_per_page = 10 
+    # Obtenha as datas de início e fim dos parâmetros da solicitação GET
+    data_inicial_str = request.GET.get('data_inicial')
+    data_final_str = request.GET.get('data_final')
 
-   
-    paginator = Paginator(vendas, items_per_page)
+    # Converta as strings de data para objetos datetime, se fornecidas
+
+    vendas = Carrinho.objects.all().order_by('-data_compra')
     
+    if data_inicial_str:
+        vendas = vendas.filter(data_compra__date__gte=data_inicial_str)
+    if data_final_str:
+        vendas = vendas.filter(data_compra__date__lte=data_final_str)
+
+    total_value = sum(venda.valor_da_compra for venda in vendas)
+    items_per_page = 10
+
+    paginator = Paginator(vendas, items_per_page)
     
     page = request.GET.get('page')
 
     try:
-        
         vendas = paginator.get_page(page)
     except PageNotAnInteger:
-        
         vendas = paginator.get_page(1)
     except EmptyPage:
-        
         vendas = paginator.get_page(paginator.num_pages)
 
-    
+    # Passe as datas iniciais e finais para o contexto do modelo
+    context = {
+        "vendas": vendas,
+        "calc_list": total_value,
+        "data_inicial": data_inicial_str,
+        "data_final": data_final_str,
+    }
 
-    return render(request, 'html/historico_vendas.html', {"vendas": vendas, 'calc_list': total_value})
+    return render(request, 'html/historico_vendas.html', context)
+
 
 
 
@@ -87,29 +99,3 @@ class PostFrenteCaixa(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-# from django.http import JsonResponse
-# from django.views.decorators.csrf import csrf_exempt
-
-# @csrf_exempt
-# def create_carrinho(request):
-#     if request.method == 'POST':
-#         data = request.POST  # Assuming you're sending data via POST
-#         produtos_nomes = data.get('produtos_nomes', '')
-#         produtos_quantidades = data.get('produtos_quantidades', '')
-#         produtos_valores = data.get('produtos_valores', '')
-#         valor_da_compra = data.get('valor_da_compra', 0)
-#         quantidade_produtos = data.get('quantidade_produtos', '')
-
-#         # Create a new Carrinho object with the received data
-#         carrinho = Carrinho.objects.create(
-#             produtos_nomes=produtos_nomes,
-#             produtos_quantidades=produtos_quantidades,
-#             produtos_valores=produtos_valores,
-#             valor_da_compra=valor_da_compra,
-#             quantidade_produtos=quantidade_produtos,
-#         )
-
-#         return JsonResponse({'message': 'Carrinho created successfully'})
-
-#     return JsonResponse({'message': 'Invalid request'}, status=400)

@@ -55,6 +55,7 @@ def create_relatorio_entrada_saida(sender, instance, created, **kwargs):
     if created:
         RelatorioEntradaSaida.objects.create(
             tipo=instance.status_entrada,
+            descricao="Venda",
             valor=instance.valor_da_compra,
             data=instance.data_compra
         )
