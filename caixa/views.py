@@ -1,5 +1,5 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.http import HttpResponse, JsonResponse
 from django.utils.decorators import method_decorator
@@ -79,7 +79,7 @@ def get_product_price(request):
 class PostFrenteCaixa(APIView):
     def post(self, request):
         serializer = CarrinhoSerializer(data=request.data)
-        
+        print(request.data)
         if serializer.is_valid():
             produtos = serializer.validated_data.pop('produtos', [])
             quantidades = serializer.validated_data.pop('quantidades', [])
@@ -99,3 +99,9 @@ class PostFrenteCaixa(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+def deletar_venda(request, id):
+
+    if request.method == 'POST':    
+        carrinho = get_object_or_404(Carrinho, id=id)
+        carrinho.delete()
+        return redirect('historico-vendas')

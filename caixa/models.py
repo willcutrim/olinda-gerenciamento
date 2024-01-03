@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
 from relatorios.models import RelatorioEntradaSaida
@@ -54,8 +54,21 @@ class Carrinho(models.Model):
 def create_relatorio_entrada_saida(sender, instance, created, **kwargs):
     if created:
         RelatorioEntradaSaida.objects.create(
+            id_do_movimento=instance.id,
             tipo=instance.status_entrada,
             descricao="Venda",
             valor=instance.valor_da_compra,
             data=instance.data_compra
         )
+
+
+@receiver(pre_delete, sender=Carrinho)
+def deletar_relatorio_entrada(sender, instance, **kwargs):
+    try:
+        relatorio = RelatorioEntradaSaida.objects.get(id_do_movimento=instance.id)
+        relatorio.delete()
+    except RelatorioEntradaSaida.DoesNotExist:
+        pass
+    except Exception as e:
+        #
+        print(f"Erro ao excluir relatório: {e}")

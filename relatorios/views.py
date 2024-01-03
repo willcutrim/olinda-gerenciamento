@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from relatorios.serializer import LogsSerializer, SaidaSerializer
 from .forms import SaidaForm
@@ -13,21 +13,47 @@ import json
 from .models import Saida
 from caixa.models import Carrinho
 from django.core.paginator import Paginator
-
+from django.utils import timezone
 
 from datetime import datetime
 
 
+from django.db.models import Sum
+
 def relatorio(request):
+
+    current_month = timezone.now().month
+    current_year = timezone.now().year
+
     
     logs = RelatorioEntradaSaida.objects.all().order_by('-data')
     
+    total_entradas = RelatorioEntradaSaida.objects.filter(tipo='entrada').aggregate(Sum('valor'))['valor__sum']
+    total_saidas = RelatorioEntradaSaida.objects.filter(tipo='saida').aggregate(Sum('valor'))['valor__sum']
+
+    logs = RelatorioEntradaSaida.objects.filter(data__month=current_month, data__year=current_year).order_by('-data')
+
+   
+    total_entradas_mensal = logs.filter(tipo='entrada').aggregate(Sum('valor'))['valor__sum']
+    total_saidas_menasl = logs.filter(tipo='saida').aggregate(Sum('valor'))['valor__sum']
+
+    # Pagination
     page_number = request.GET.get('page', 1)
     items_per_page = 10
+    paginator = Paginator(logs, items_per_page)
+    page_logs = paginator.get_page(page_number)
+    
+    # Pass the total values to the template context
+    context = {
+        'logs': page_logs,
+        'total_entradas': total_entradas or 0,
+        'total_entradas_mensal': total_entradas_mensal or 0,
+        'total_saidas_mensal': total_saidas_menasl or 0,
+        'total_saidas': total_saidas or 0,    
+    }
 
-    logs = Paginator(logs, items_per_page)
-    page_logs = logs.get_page(page_number)
-    return render(request, 'html/relatorio.html', {'logs': page_logs})
+    return render(request, 'html/relatorio.html', context)
+
 
 
 
@@ -82,3 +108,12 @@ class DataAllRelatorio(APIView):
             'logs_data': serializer_data.data
         }
         return Response(data)
+    
+
+def deletar_relatorio(request, id):
+    
+    if request.method == 'POST':    
+        relatorio = get_object_or_404(RelatorioEntradaSaida, id=id)
+        relatorio.delete()
+        return redirect('relatorio')
+    

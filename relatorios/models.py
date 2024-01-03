@@ -1,8 +1,9 @@
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
-
+import caixa
+# from caixa.models import Carrinho
 
 class Saida(models.Model):
     saida_status = models.CharField(max_length=120, default='saida')
@@ -27,6 +28,7 @@ class Saida(models.Model):
     
 
 class RelatorioEntradaSaida(models.Model):
+    id_do_movimento = models.CharField(max_length=150)
     tipo = models.CharField(max_length=150)
     descricao = models.TextField(max_length=250)
     valor = models.DecimalField(decimal_places=2, max_digits=10, default=0)
@@ -44,8 +46,21 @@ class RelatorioEntradaSaida(models.Model):
 def create_relatorio_entrada_saida(sender, instance, created, **kwargs):
     if created:
         RelatorioEntradaSaida.objects.create(
+            id_do_movimento=instance.id,
             tipo=instance.saida_status,
             descricao=instance.descricao,
             valor=instance.valor_despesa,
             data=instance.data_saida
         )
+    
+
+@receiver(pre_delete, sender=RelatorioEntradaSaida)
+def deletar_relatorio_entrada(sender, instance, **kwargs):
+    try:
+        relatorio = caixa.models.Carrinho.objects.get(id=instance.id_do_movimento)
+        relatorio.delete()
+    except caixa.models.Carrinho.DoesNotExist:
+        pass
+    except Exception as e:
+        #
+        print(f"Erro ao excluir relatório: {e}")

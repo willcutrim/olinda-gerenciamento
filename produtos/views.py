@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from .forms import CategoriaForm, FornecedorForm, ProdutoForm
 from produtos.models import Categoria, Produto
@@ -49,3 +49,12 @@ def create_category(request):
         return JsonResponse({'message': 'Categoria cadastrada com sucesso!'})
     else:
         return JsonResponse({'error': 'Método inválido'}, status=400)
+    
+
+def deletar_produto(request, id):
+   
+    if request.method == 'POST':    
+        produto = get_object_or_404(Produto, id=id)
+        produto.delete()
+        return redirect('produtos')
+    

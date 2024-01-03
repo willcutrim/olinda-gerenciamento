@@ -25,6 +25,7 @@
                             <th>DESCRIÇÃO</th>
                             <th>DATA</th>
                             <th>VALOR</th>
+                            <th>AÇÕES</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,6 +35,11 @@
                             <td>{{data_relatorio.descricao|default:"-----"}}</td>
                             <td>{{data_relatorio.data_log_formatada}}</td>
                             <td>{{data_relatorio.valor}}</td>
+                            <td>
+                                <form action="{% url 'deletar-relatorio' data_relatorio.pk %}" method="post" class="d-inline">{% csrf_token %}
+                                    <button class="btn btn-danger" type="submit"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -58,7 +64,73 @@
             </div>
         </div>
     </div>
-   
+   <div class="row">
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Entradas (TOTAL)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">R$ +{{total_entradas}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-arrow-up fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Saídas (TOTAL)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">R$ -{{total_saidas}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-arrow-down fa-2x text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Entradas (MENSAL)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">R$ +{{total_entradas_mensal}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Saídas (MENSAL)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">R$ -{{total_saidas_mensal}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
 </div>
 <script src="{% static 'js/chart.js' %}"></script>
     

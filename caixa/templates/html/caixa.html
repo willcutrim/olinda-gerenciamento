@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static%}
 {% block title %}Caixa{% endblock %}
 
 {% block content %}
@@ -56,9 +56,9 @@
     </div>
     <button class="btn btn-primary" type="button" id="submit-form">Finalizar pedido</button>
 </form>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="sweetalert2.all.min.js"></script>
+<script src="{% static 'jquery/jquery-3.6.0.min.js'%}"></script>
+<script src="{% static 'js/sweetalert2@11.j' %}"></script>
+<script src="{% static 'js/sweetalert2.all.min.js'%}"></script>
 <script>
     
     $(document).ready(function() {
@@ -150,7 +150,7 @@
     
         var apiUrl = 'post-caixa';
     
-        
+        console.log(dataToSend)
         $.ajax({
             url: apiUrl,
             type: 'POST',

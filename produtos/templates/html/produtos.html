@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Produtos {% endblock %}
 
 {% block content %}
@@ -19,27 +19,23 @@
                             <th>Marca</th>
                             <th>Categoria</th>
                             <th>Preço</th>
+                            <th>AÇÕES</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Tamanho</th>
-                            <th>Marca</th>
-                            <th>Categoria</th>
-                            <th>Preço</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                         {% for produto in produtos %}
                         <tr>
                             <td>{{produto.pk}}</td>
-                            <td>{{produto.nome}}</td>
-                            <td>{{produto.tamanho}}</td>
-                            <td>{{produto.marca}}</td>
-                            <td>{{produto.categoria}}</td>
-                            <td>{{produto.preco}}</td>
+                            <td>{{produto.nome|default:"---"}}</td>
+                            <td>{{produto.tamanho|default:"---"}}</td>
+                            <td>{{produto.marca|default:"---"}}</td>
+                            <td>{{produto.categoria|default:"---"}}</td>
+                            <td>{{produto.preco|default:"---"}}</td>
+                            <td>
+                                <form action="{% url 'deletar-produto' produto.pk %}" method="post" class="d-inline">{% csrf_token %}
+                                    <button class="btn btn-danger" type="submit"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -69,7 +65,7 @@
     </a>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static "jquery/jquery.min.js"%}"></script>
 <script>
     $(document).ready(function() {
         $.ajax({
@@ -91,6 +87,6 @@
             }
         });
     });
-    </script>
+</script>
 
 {% endblock %}

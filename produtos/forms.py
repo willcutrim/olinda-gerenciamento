@@ -14,5 +14,5 @@ class FornecedorForm(forms.ModelForm):
 class ProdutoForm(forms.ModelForm):
     class Meta:
         model = Produto
-        fields = ('nome', 'descricao', 'categoria', 'preco', 'tamanho', 'cor', 'marca', 'fornecedor', 'destaque', 'em_promocao')
+        fields = ('nome', 'descricao', 'categoria', 'preco', 'tamanho', 'cor', 'marca', 'fornecedor',)
 

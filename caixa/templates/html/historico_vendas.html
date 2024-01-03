@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Histórico de vendas {% endblock %}
 
 {% block content %}
@@ -32,17 +32,9 @@
                             <th>QTd. de peças</th>
                             <th>data da venda</th>
                             <th>Valor da venda</th>
+                            <th>AÇÕES</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>ID</th>
-                            <th>Produtos</th>
-                            <th>QTd. de peças</th>
-                            <th>Data da venda</th>
-                            <th>Valor da venda</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                         {% for venda in vendas%}
                         <tr>
@@ -51,6 +43,11 @@
                             <td>{{venda.quantidade_produtos}}</td>
                             <td>{{venda.data_compra}}</td>
                             <td>{{venda.valor_da_compra}}</td>
+                            <td>
+                                <form action="{% url 'deletar-venda' venda.pk %}" method="post" class="d-inline">{% csrf_token %}
+                                    <button class="btn btn-danger" type="submit"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -82,7 +79,7 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static "jquery/jquery.min.js"%}"></script>
 <script>
     $(document).ready(function() {
         $.ajax({

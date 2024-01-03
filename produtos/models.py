@@ -16,15 +16,15 @@ class Fornecedor(models.Model):
 class Produto(models.Model):
     # codigo_de_barras = models.UUIDField(default=uuid.uuid4, unique=True)
     nome = models.CharField(max_length=100)
-    descricao = models.TextField()
-    categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)
+    descricao = models.TextField(null=True, blank=True)
+    categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, null=True, blank=True)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
-    tamanho = models.CharField(max_length=10)
-    cor = models.CharField(max_length=50)
-    marca = models.CharField(max_length=50)
+    tamanho = models.CharField(max_length=10, null=True, blank=True)
+    cor = models.CharField(max_length=50, null=True, blank=True)
+    marca = models.CharField(max_length=50, null=True, blank=True)
     fornecedor = models.ForeignKey(Fornecedor, on_delete=models.PROTECT, null=True, blank=True)
-    destaque = models.BooleanField(default=False)
-    em_promocao = models.BooleanField(default=False)
+    destaque = models.BooleanField(default=False, null=True, blank=True)
+    em_promocao = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return self.nome
