@@ -4,7 +4,7 @@ from django.views import View
 from .forms import CategoriaForm, FornecedorForm, ProdutoForm
 from produtos.models import Categoria, Produto
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
+from django.views.generic.edit import UpdateView
 
 class GetAllProducts(View):
     def get(self, request, *args, **kwargs):
@@ -58,3 +58,16 @@ def deletar_produto(request, id):
         produto.delete()
         return redirect('produtos')
     
+
+class ProdutoUpdateView(UpdateView):
+    model = Produto
+    form_class = ProdutoForm
+    template_name = 'html/atualizar_produtos.html'  # Create a template for updating products
+    success_url = '/produtos/'  # Redirect to this URL upon successful update
+
+    def form_valid(self, form):
+        # You can perform additional actions when the form is successfully validated and saved.
+        # For example, you might want to log the user who made the update.
+        # Here's a basic example:
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)

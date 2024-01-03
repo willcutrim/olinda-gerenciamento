@@ -22,6 +22,9 @@ from django.db.models import Sum
 
 def relatorio(request):
 
+    data_inicial_str = request.GET.get('data_inicial')
+    data_final_str = request.GET.get('data_final')
+
     current_month = timezone.now().month
     current_year = timezone.now().year
 
@@ -33,7 +36,12 @@ def relatorio(request):
 
     logs = RelatorioEntradaSaida.objects.filter(data__month=current_month, data__year=current_year).order_by('-data')
 
-   
+    if data_final_str:
+        logs = logs.filter(data__date__gte=data_inicial_str)
+    if data_final_str:
+        logs = logs.filter(data__date__lte=data_final_str)
+
+
     total_entradas_mensal = logs.filter(tipo='entrada').aggregate(Sum('valor'))['valor__sum']
     total_saidas_menasl = logs.filter(tipo='saida').aggregate(Sum('valor'))['valor__sum']
 
@@ -49,7 +57,10 @@ def relatorio(request):
         'total_entradas': total_entradas or 0,
         'total_entradas_mensal': total_entradas_mensal or 0,
         'total_saidas_mensal': total_saidas_menasl or 0,
-        'total_saidas': total_saidas or 0,    
+        'total_saidas': total_saidas or 0, 
+        'data_inicial': data_inicial_str,
+        'data_final': data_final_str,
+        
     }
 
     return render(request, 'html/relatorio.html', context)

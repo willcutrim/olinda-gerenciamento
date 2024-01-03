@@ -32,8 +32,11 @@
                             <td>{{produto.categoria|default:"---"}}</td>
                             <td>{{produto.preco|default:"---"}}</td>
                             <td>
+                                <a href="{% url 'produto-update' pk=produto.pk %}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-pen text-white"></i>
+                                </a>
                                 <form action="{% url 'deletar-produto' produto.pk %}" method="post" class="d-inline">{% csrf_token %}
-                                    <button class="btn btn-danger" type="submit"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-danger btn-sm" type="submit"><i class="fas fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>

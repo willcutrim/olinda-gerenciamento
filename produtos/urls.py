@@ -6,6 +6,6 @@ urlpatterns = [
     path('produtos', views.produtos, name="produtos"),
     path('cadastro-produto', views.cadastro_de_produtos, name='cadastro-produto'),
     path('deletar_produto/<int:id>', views.deletar_produto, name='deletar-produto'),
-
+    path('produto/<int:pk>/update/', views.ProdutoUpdateView.as_view(), name='produto-update'),
     path('create-category/', views.create_category, name='create_category'),
 ]
