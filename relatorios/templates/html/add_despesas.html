@@ -1,12 +1,44 @@
 {% extends 'base.html' %}
 {% load bootstrap5 %}
-
+{% load static %}
 {% block title %}Criar despesa {% endblock %}
 
 {% block content %}
-<form method="post"> {% csrf_token %}
+<form method="post" id="despesa-form"> {% csrf_token %}
     {% bootstrap_form form %}
     {% bootstrap_button button_type="submit" content="Adicionar"%}
 </form>
-    
+
+<script src="{% static "jquery/jquery.min.js"%}"></script>
+<script src="{% static "js/sweetalert2@11"%}"></script>
+<script src="{% static "js/sweetalert2.all.min.js"%}"></script>
+<script>
+    $(document).ready(function () {
+        $('#despesa-form').submit(function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url "add_relatorio" %}',
+                data: $('#despesa-form').serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Despesa cadastrada com sucesso!',
+                            timer: 2000,
+                            showConfirmButton: false,
+                        }).then(function () {
+                            location.reload();
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
 {% endblock content %}

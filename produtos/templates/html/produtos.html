@@ -35,8 +35,9 @@
                                 <a href="{% url 'produto-update' pk=produto.pk %}" class="btn btn-warning btn-sm">
                                     <i class="fas fa-pen text-white"></i>
                                 </a>
-                                <form action="{% url 'deletar-produto' produto.pk %}" method="post" class="d-inline">{% csrf_token %}
-                                    <button class="btn btn-danger btn-sm" type="submit"><i class="fas fa-trash"></i></button>
+                                
+                                <form action="{% url 'deletar-produto' produto.pk %}" method="post" class="d-inline" id="deleteForm{{ produto.id }}">{% csrf_token %}
+                                    <button class="btn btn-danger btn-sm" type="button" onclick="confirmDelete({{ produto.id }})"><i class="fas fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -68,6 +69,8 @@
     </a>
 </div>
 
+<script src="{% static 'js/sweetalert2.all.min.js'%}"></script>
+<script src="{% static 'js/sweetalert2@11.j' %}"></script>
 <script src="{% static "jquery/jquery.min.js"%}"></script>
 <script>
     $(document).ready(function() {
@@ -90,6 +93,23 @@
             }
         });
     });
+
+    function confirmDelete(produtoId) {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: 'Você não poderá recuperar este produto!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sim, exclua-o!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, submit the corresponding form
+                document.getElementById('deleteForm' + produtoId).submit();
+            }
+        });
+    }
 </script>
 
 {% endblock %}

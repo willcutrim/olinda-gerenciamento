@@ -73,7 +73,8 @@ def add_despesas(request):
         form = SaidaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('add_relatorio')
+            response_data = {'success': 'Despesa cadastrada com sucesso!'}
+            return JsonResponse(response_data)
     else:
         form = SaidaForm()
     return render(request, 'html/add_despesas.html', {'form': form})

@@ -33,7 +33,8 @@ def cadastro_de_produtos(request):
         form = ProdutoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('cadastro-produto')
+            response_data = {'success': 'Produto cadastrado com suceosso!'}
+            return JsonResponse(response_data)
     else:
         form = ProdutoForm()
     return render(request, 'html/cadastrar_produtos.html', {'form': form})

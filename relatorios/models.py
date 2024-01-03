@@ -38,7 +38,7 @@ class RelatorioEntradaSaida(models.Model):
         return self.tipo
     
     def data_log_formatada(self):
-        return self.data.strftime('%d/%m/%Y')
+        return self.data.strftime('%d/%m/%Y - %H:%M')
 
 
 

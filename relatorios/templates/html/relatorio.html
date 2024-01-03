@@ -49,8 +49,8 @@
                             <td>{{data_relatorio.data_log_formatada}}</td>
                             <td>{{data_relatorio.valor}}</td>
                             <td>
-                                <form action="{% url 'deletar-relatorio' data_relatorio.pk %}" method="post" class="d-inline">{% csrf_token %}
-                                    <button class="btn btn-danger" type="submit"><i class="fas fa-trash"></i></button>
+                                <form action="{% url 'deletar-relatorio' data_relatorio.pk %}" method="post" class="d-inline" id="deleteForm{{ data_relatorio.id }}">{% csrf_token %}
+                                    <button class="btn btn-danger" type="button" onclick="confirmDelete({{ data_relatorio.id }})"><i class="fas fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -145,108 +145,27 @@
         
     </div>
 </div>
-<script src="{% static 'js/chart.js' %}"></script>
+<script src="{% static 'js/sweetalert2.all.min.js'%}"></script>
+<script src="{% static 'js/sweetalert2@11.j' %}"></script>
+<script src="{% static "jquery/jquery.min.js"%}"></script>
     
 <script>
-    
-    //const url = 'http://localhost:8000/data-relatorio';
-    /*
-    fetch(url)
-    .then(response => {*/
-            if (!response.ok) {
-                throw new Error('Não foi possível obter os dados');
+    function confirmDelete(relatorioId) {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: 'Você não poderá recuperar este registro!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sim, excluir!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, submit the corresponding form
+                document.getElementById('deleteForm' + relatorioId).submit();
             }
-                return response.json();
-        })
-        .then(data => {
-
-            var ctx = document.getElementById("myPieChart");
-            var myPieChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ["ENTRADA", "SAÍDA"],
-                    datasets: [{
-                        data: [data.carrinho, data.saidas],
-                        backgroundColor: ['#1cc88a', '#ff0000'],
-                        hoverBackgroundColor: ['#17a673', '#a51b0b'],
-                        hoverBorderColor: "rgba(234, 236, 244, 1)",
-                    }],
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    tooltips: {
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFontColor: "#858796",
-                        borderColor: '#dddfeb',
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                    },
-                    legend: {
-                        display: false
-                    },
-                    cutoutPercentage: 80,
-                },
-            });
-
-        })
-        .catch(error => {
-
-            console.error('Erro: ', error);
         });
-
-
-        
-        const urlRelatorio = 'http://localhost:8000/data-all-relatorio';
-        
-        function fetchDataAndCreateChart() {
-            fetch(urlRelatorio)
-            .then(response => response.json())
-            .then(data => {
-                
-                const ctx = document.getElementById('myChart').getContext('2d');
-
-                const chartData = {
-                    labels: data.logs_data.map(item => item.data_log_formatada), 
-                    datasets: [
-                        {
-                            label: 'ENTRADA',
-                            data: data.entrada.map(item => item.valor),
-                            backgroundColor: '#1cc88a',
-                            borderColor: '#fff',
-                            borderWidth: 1,
-                        },
-                        {
-                            label: 'SAÍDA',
-                            data: data.saida.map(item => item.valor),
-                            backgroundColor: '#ff0000',
-                            borderColor: '#fff',
-                            borderWidth: 1,
-                        },
-                    ],
-                };
-                
-                const chartOptions = {
-                scales: {
-                    y: {
-                    beginAtZero: true,
-                    },
-                },
-                };
-                
-                new Chart(ctx, {
-                    type: 'bar',  // Pode ser 'bar', 'line', 'pie', etc.
-                    data: chartData,
-                    options: chartOptions,
-                });
-            })
-            .catch(error => {
-                console.error('Erro ao buscar dados:', error);
-            });
-        }
-          
-        fetchDataAndCreateChart();
+    }
+           
 </script>
 {% endblock content %}

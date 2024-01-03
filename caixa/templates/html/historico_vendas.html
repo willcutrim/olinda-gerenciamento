@@ -44,8 +44,8 @@
                             <td>{{venda.data_compra}}</td>
                             <td>{{venda.valor_da_compra}}</td>
                             <td>
-                                <form action="{% url 'deletar-venda' venda.pk %}" method="post" class="d-inline">{% csrf_token %}
-                                    <button class="btn btn-danger" type="submit"><i class="fas fa-trash"></i></button>
+                                <form action="{% url 'deletar-venda' venda.pk %}" method="post" class="d-inline" id="deleteForm{{ venda.id }}">{% csrf_token %}
+                                    <button class="btn btn-danger" type="button" onclick="confirmDelete({{ venda.id }})"><i class="fas fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -78,8 +78,10 @@
         </div>
     </div>
 </div>
-
+<script src="{% static 'js/sweetalert2.all.min.js'%}"></script>
+<script src="{% static 'js/sweetalert2@11.j' %}"></script>
 <script src="{% static "jquery/jquery.min.js"%}"></script>
+
 <script>
     $(document).ready(function() {
         $.ajax({
@@ -101,6 +103,23 @@
             }
         });
     });
-    </script>
+
+    function confirmDelete(vendaId) {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: 'Você não poderá recuperar esta venda!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sim, exclua-la!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, submit the corresponding form
+                document.getElementById('deleteForm' + vendaId).submit();
+            }
+        });
+    }
+</script>
 
 {% endblock %}
