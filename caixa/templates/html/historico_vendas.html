@@ -32,7 +32,9 @@
                             <th>QTd. de peças</th>
                             <th>data da venda</th>
                             <th>Valor da venda</th>
+                            {% if user.is_superuser == True %}
                             <th>AÇÕES</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -43,11 +45,13 @@
                             <td>{{venda.quantidade_produtos}}</td>
                             <td>{{venda.data_compra}}</td>
                             <td>{{venda.valor_da_compra}}</td>
+                            {% if user.is_superuser == True %}
                             <td>
                                 <form action="{% url 'deletar-venda' venda.pk %}" method="post" class="d-inline" id="deleteForm{{ venda.id }}">{% csrf_token %}
                                     <button class="btn btn-danger" type="button" onclick="confirmDelete({{ venda.id }})"><i class="fas fa-trash"></i></button>
                                 </form>
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

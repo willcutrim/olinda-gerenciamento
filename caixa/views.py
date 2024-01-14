@@ -11,15 +11,15 @@ from rest_framework.response import Response
 from produtos.models import Produto
 from rest_framework import status
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 
 
 
-
-
+@login_required(login_url="login")
 def home(request):
     return render(request, 'html/index.html')
 
-
+@login_required(login_url="login")
 def historico_de_vendas(request):
     # Obtenha as datas de início e fim dos parâmetros da solicitação GET
     data_inicial_str = request.GET.get('data_inicial')
@@ -60,10 +60,12 @@ def historico_de_vendas(request):
 
 
 
-
+@login_required(login_url="login")
 def caixa(request):
     produtos = Produto.objects.all()
     return render(request, 'html/caixa.html', {'produtos': produtos})
+
+
 
 def get_product_price(request):
     
@@ -75,7 +77,6 @@ def get_product_price(request):
     except Produto.DoesNotExist:
         return JsonResponse({'preco': 0.00})
     
-
 class PostFrenteCaixa(APIView):
     def post(self, request):
         serializer = CarrinhoSerializer(data=request.data)
@@ -98,7 +99,7 @@ class PostFrenteCaixa(APIView):
             return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+@login_required(login_url="login")
 def deletar_venda(request, id):
 
     if request.method == 'POST':    

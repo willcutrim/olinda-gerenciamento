@@ -1,11 +1,12 @@
 from django.db import models
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
-
 import caixa
-# from caixa.models import Carrinho
+
+
 
 class Saida(models.Model):
+    user = models.CharField(max_length=120)
     saida_status = models.CharField(max_length=120, default='saida')
     tipo_de_despesa = models.CharField(
         max_length=150, 
@@ -34,13 +35,12 @@ class RelatorioEntradaSaida(models.Model):
     valor = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     data = models.DateTimeField(auto_now_add=True)
 
+
     def __str__(self):
         return self.tipo
     
     def data_log_formatada(self):
         return self.data.strftime('%d/%m/%Y - %H:%M')
-
-
 
 @receiver(post_save, sender=Saida)
 def create_relatorio_entrada_saida(sender, instance, created, **kwargs):
@@ -57,10 +57,11 @@ def create_relatorio_entrada_saida(sender, instance, created, **kwargs):
 @receiver(pre_delete, sender=RelatorioEntradaSaida)
 def deletar_relatorio_entrada(sender, instance, **kwargs):
     try:
+               
         relatorio = caixa.models.Carrinho.objects.get(id=instance.id_do_movimento)
         relatorio.delete()
     except caixa.models.Carrinho.DoesNotExist:
         pass
     except Exception as e:
-        #
+
         print(f"Erro ao excluir relatório: {e}")

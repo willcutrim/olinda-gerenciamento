@@ -5,6 +5,9 @@ from .forms import CategoriaForm, FornecedorForm, ProdutoForm
 from produtos.models import Categoria, Produto
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic.edit import UpdateView
+from django.contrib.auth.decorators import login_required
+
+
 
 class GetAllProducts(View):
     def get(self, request, *args, **kwargs):
@@ -12,6 +15,8 @@ class GetAllProducts(View):
         data = [{'nome': produto.nome, 'descricao': produto.descricao, 'preco': produto.preco} for produto in produtos]
         return JsonResponse({'status': 200, 'produtos': data})
     
+
+@login_required(login_url="login")
 def produtos(request):
     produtos = Produto.objects.all()
     paginator = Paginator(produtos, 10)
@@ -27,7 +32,7 @@ def produtos(request):
 
     return render(request, 'html/produtos.html', {'produtos': produtos})
 
-
+@login_required(login_url="login")
 def cadastro_de_produtos(request):
     if request.method == 'POST':
         form = ProdutoForm(request.POST)
@@ -52,6 +57,8 @@ def create_category(request):
         return JsonResponse({'error': 'Método inválido'}, status=400)
     
 
+
+@login_required(login_url="login")
 def deletar_produto(request, id):
    
     if request.method == 'POST':    

@@ -38,7 +38,9 @@
                             <th>DESCRIÇÃO</th>
                             <th>DATA</th>
                             <th>VALOR</th>
+                            {% if user.is_superuser == True %}
                             <th>AÇÕES</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -48,11 +50,13 @@
                             <td>{{data_relatorio.descricao|default:"-----"}}</td>
                             <td>{{data_relatorio.data_log_formatada}}</td>
                             <td>{{data_relatorio.valor}}</td>
+                            {% if user.is_superuser == True %}
                             <td>
                                 <form action="{% url 'deletar-relatorio' data_relatorio.pk %}" method="post" class="d-inline" id="deleteForm{{ data_relatorio.id }}">{% csrf_token %}
                                     <button class="btn btn-danger" type="button" onclick="confirmDelete({{ data_relatorio.id }})"><i class="fas fa-trash"></i></button>
                                 </form>
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

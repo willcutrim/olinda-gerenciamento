@@ -1,25 +1,24 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
-from relatorios.serializer import LogsSerializer, SaidaSerializer
+from relatorios.serializer import LogsSerializer
 from .forms import SaidaForm
 from .models import Saida, RelatorioEntradaSaida
 from caixa.models import Carrinho
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
-import json
-
 from .models import Saida
 from caixa.models import Carrinho
 from django.core.paginator import Paginator
 from django.utils import timezone
-
 from datetime import datetime
-
-
+from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 
+
+
+
+@login_required(login_url="login")
 def relatorio(request):
 
     data_inicial_str = request.GET.get('data_inicial')
@@ -50,8 +49,7 @@ def relatorio(request):
     items_per_page = 10
     paginator = Paginator(logs, items_per_page)
     page_logs = paginator.get_page(page_number)
-    
-    # Pass the total values to the template context
+
     context = {
         'logs': page_logs,
         'total_entradas': total_entradas or 0,
@@ -67,12 +65,12 @@ def relatorio(request):
 
 
 
-
+@login_required(login_url="login")
 def add_despesas(request):
     if request.method == 'POST':
         form = SaidaForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user=request.user)
             response_data = {'success': 'Despesa cadastrada com sucesso!'}
             return JsonResponse(response_data)
     else:
@@ -121,7 +119,7 @@ class DataAllRelatorio(APIView):
         }
         return Response(data)
     
-
+@login_required(login_url="login")
 def deletar_relatorio(request, id):
     
     if request.method == 'POST':    

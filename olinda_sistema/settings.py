@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'caixa',
     'produtos',
     'relatorios',
+    'usuarios',
 
     # django rest
     'rest_framework',
