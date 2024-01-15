@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block title %}Lista de usuários {% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Usuários</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>#{{user.pk}}</td>
+                            <td>{{user.username|default:"---"}}</td>
+                            <td>
+                                <a href="{% url 'editar-usuarios' pk=user.pk %}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-pen text-white"></i>
+                                </a>
+                                
+                                <form action="" method="post" class="d-inline" id="deleteForm{{ user.id }}">{% csrf_token %}
+                                    <button class="btn btn-danger btn-sm" type="button" onclick="confirmDelete({{ user.id }})"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if users.has_previous %}
+                            <a href="?page=1">&laquo; Pimeiro</a>
+                            <a 1href="?page={{ users.previous_page_number }}">Voltar</a>
+                        {% endif %}
+                        
+                        <span class="current-page">
+                            Página {{ users.number }} de {{ users.paginator.num_pages }}
+                        </span>
+                        
+                        {% if users.has_next %}
+                            <a href="?page={{ users.next_page_number }}">Próximo</a>
+                            <a href="?page={{ users.paginator.num_pages }}">Último &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="{% static 'jquery/jquery.min.js'%}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="{% static 'jquery-easing/jquery.easing.min.js'%}"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="{% static 'js/sb-admin-2.min.js'%}"></script>
+
+{% endblock content %}

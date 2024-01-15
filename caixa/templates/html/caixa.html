@@ -56,9 +56,9 @@
     </div>
     <button class="btn btn-primary" type="button" id="submit-form">Finalizar pedido</button>
 </form>
-<script src="{% static 'jquery/jquery-3.6.0.min.js'%}"></script>
-<script src="{% static 'js/sweetalert2@11.js' %}"></script>
-<script src="{% static 'js/sweetalert2.all.min.js'%}"></script>
+<script src="{% static 'jquery/jquery.min.js'%}"></script>
+<script src="{% static 'bootstrap/js/sweetalert2@11.js' %}"></script>
+<script src="{% static 'bootstrap/js/sweetalert2.all.min.js'%}"></script>
 <script>
     
     $(document).ready(function() {
@@ -74,7 +74,6 @@
     
             $('#total-value .badge').text('Valor Total: R$ ' + total.toFixed(2));
             quantidadeTotal = total;
-            console.log(total, quantidadeTotal);
             return total;
         }
     
@@ -150,7 +149,6 @@
     
         var apiUrl = 'post-caixa';
     
-        console.log(dataToSend)
         $.ajax({
             url: apiUrl,
             type: 'POST',
