@@ -2,12 +2,12 @@
 <!DOCTYPE html>
 
 <html lang="pt-br">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
-    <link href="{% static 'bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
-    
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
     <style>
         body, html {
             height: 100%;
@@ -17,49 +17,64 @@
             justify-content: center;
         }
 
-        .container-fluid{
+        .container-fluid {
             width: 800px;
         }
-        
-        .card{
+
+        .card {
             height: 400px
         }
-    </style>
-  </head>
-  <body>
-    <div class="container">
 
-        <div class="container-fluid">
-            <div class="card shadow">
-                <div class="card-header bg-primary">
-                    <h3 class="font-weight-bold text-center text-white">Login</h3>
+        .messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 300px; /* Ajuste conforme necessário */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="messages">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <p>{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <div class="card-body d-flex justify-content-center align-items-center">
-                    <form method="post" action="{% url 'login' %}">
-                        {% csrf_token %}
-                        <div class="mb-1">
-                            <label for="id_username" class="col-form-label">Username:</label>
-                            <div class="col-12">
-                                <input type="text" name="username" class="form-control" placeholder="Username" id="id_username">
-                            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="container-fluid">
+        <div class="card shadow">
+            <div class="card-header bg-primary">
+                <h3 class="font-weight-bold text-center text-white">Login</h3>
+            </div>
+            <div class="card-body d-flex justify-content-center align-items-center">
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="mb-1">
+                        <label for="id_username" class="col-form-label">Username:</label>
+                        <div class="col-12">
+                            <input type="text" name="username" class="form-control" placeholder="Username" id="id_username">
                         </div>
-                        <div class="mb-3">
-                            <label for="id_password" class="col-form-label">Senha:</label>
-                            <div class="col-12">
-                                <input type="password" name="password" class="form-control" placeholder="Senha" id="id_password">
-                            </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_password" class="col-form-label">Senha:</label>
+                        <div class="col-12">
+                            <input type="password" name="password" class="form-control" placeholder="Senha" id="id_password">
                         </div>
-                        <button type="submit" class="btn btn-success col-12">Entrar</button>
-                    </form>
-                    
-                </div>
+                    </div>
+                    <button type="submit" class="btn btn-success col-12">Entrar</button>
+                </form>
             </div>
         </div>
-        
     </div>
-    <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
-
-    <script src="{% static 'js/popper.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  </body>
+</div>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
 </html>

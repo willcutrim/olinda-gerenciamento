@@ -5,7 +5,7 @@
 {% block content %}
 
 <h1 class="alert alert d-flex justify-content-center bg-gradient-primary text-light">Caixa</h1>
-<form id="product-form">
+<form method="post" id="product-form" action="{% url 'post-caixa' %}">
     {% csrf_token %}
     <div id="product-inputs">
         <div class="row mb-3">
@@ -146,7 +146,7 @@
     
         // Add the total value to the dataToSend object
         dataToSend.valorTotal = valorTotal;
-    
+        
         var apiUrl = 'post-caixa';
     
         $.ajax({
@@ -154,7 +154,7 @@
             type: 'POST',
             contentType: 'application/json',
             headers: {
-                'X-CSRFToken': '{{csrfToken}}'
+                'X-CSRFToken': getCSRFToken(),
             },
             data: JSON.stringify(dataToSend),
             success: function(response) {
@@ -208,7 +208,10 @@
             });
         });
         
-        
+        function getCSRFToken() {
+            const cookieValue = document.cookie.split(';').find(row => row.startsWith('csrftoken=')).split('=')[1];
+            return cookieValue;
+        }
     
 </script>
 {% endblock %}
