@@ -1,4 +1,4 @@
-# Projeto feito para um loja parceira.
+# Projeto feito para uma loja parceira.
 <p>
   <img src="https://github.com/willcutrim/olinda-gerenciamento/assets/37386568/639fe90b-475a-41c6-b4ac-1b63b47d49fc" width="800">
 
