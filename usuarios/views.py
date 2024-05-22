@@ -22,7 +22,6 @@ def login_View(request):
             user = authenticate(username=username, password=password)
             if user is not None and check_password(password, user.password):
                 login(request, user)
-                print(request, f'Bem-vindo, {username}!')
                 return redirect('home')
             else:
                 messages.error(request, 'Nome de usuário ou senha incorretos.')
@@ -47,6 +46,10 @@ def cadastrar_usuários(request):
         form = UserForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Cadastrado co sucesso.')
+            return redirect('cadastrar-usuarios')
+        else:
+            messages.error(request, 'Erro ao cadastrar usuário.')
             return redirect('cadastrar-usuarios')
     else:
         form = UserForm()      
@@ -95,3 +98,11 @@ def atualizar_usuario(request, pk):
         form = UserForm(instance=user)
 
     return render(request, 'html/editar_usuario.html', {'form': form, 'user': user})
+
+
+def deletar_usuario(request, pk):
+    user = get_object_or_404(User, id=pk)
+    if request.method == 'POST':
+        user.delete()
+        messages.success(request, 'Usuário excluído com sucesso.')
+        return redirect('lista-de-usuarios')

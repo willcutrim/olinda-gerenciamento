@@ -30,9 +30,11 @@
                                 <a href="{% url 'editar-usuarios' pk=user.pk %}" class="btn btn-warning btn-sm">
                                     <i class="fas fa-pen text-white"></i>
                                 </a>
-                                
-                                <form action="" method="post" class="d-inline" id="deleteForm{{ user.id }}">{% csrf_token %}
-                                    <button class="btn btn-danger btn-sm" type="button" onclick="confirmDelete({{ user.id }})"><i class="fas fa-trash"></i></button>
+
+                                <form action="{% url 'deletar-usuarios' user.pk %}" method="post" class="d-inline"
+                                    id="deleteForm{{ user.id }}">{% csrf_token %}
+                                    <button class="btn btn-danger btn-sm" type="button"
+                                        onclick="confirmDelete({{ user.id }})"><i class="fas fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -42,30 +44,51 @@
                 <div class="pagination">
                     <span class="step-links">
                         {% if users.has_previous %}
-                            <a href="?page=1">&laquo; Pimeiro</a>
-                            <a 1href="?page={{ users.previous_page_number }}">Voltar</a>
+                        <a href="?page=1">&laquo; Pimeiro</a>
+                        <a 1href="?page={{ users.previous_page_number }}">Voltar</a>
                         {% endif %}
-                        
+
                         <span class="current-page">
                             Página {{ users.number }} de {{ users.paginator.num_pages }}
                         </span>
-                        
+
                         {% if users.has_next %}
-                            <a href="?page={{ users.next_page_number }}">Próximo</a>
-                            <a href="?page={{ users.paginator.num_pages }}">Último &raquo;</a>
+                        <a href="?page={{ users.next_page_number }}">Próximo</a>
+                        <a href="?page={{ users.paginator.num_pages }}">Último &raquo;</a>
                         {% endif %}
                     </span>
                 </div>
             </div>
         </div>
     </div>
-<script src="{% static 'jquery/jquery.min.js'%}"></script>
-<script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
+</div>
+    <script src="{% static 'jquery/jquery.min.js'%}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
 
-<!-- Core plugin JavaScript-->
-<script src="{% static 'jquery-easing/jquery.easing.min.js'%}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'jquery-easing/jquery.easing.min.js'%}"></script>
 
-<!-- Custom scripts for all pages-->
-<script src="{% static 'js/sb-admin-2.min.js'%}"></script>
 
-{% endblock content %}
+
+    <script src="{% static  'jquery/jquery.min.js'%}"></script>
+    <script src="{% static 'js/sweetalert2@11.js'%}"></script>
+    <script src="{% static 'js/sweetalert2.all.min.js' %}"></script>
+    <script>
+        function confirmDelete(userId) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Você não poderá recuperar este registro!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sim, excluir!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If confirmed, submit the corresponding form
+                    document.getElementById('deleteForm' + userId).submit();
+                }
+            });
+        }
+    </script>
+    {% endblock content %}

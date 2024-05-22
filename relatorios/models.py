@@ -65,3 +65,14 @@ def deletar_relatorio_entrada(sender, instance, **kwargs):
     except Exception as e:
 
         print(f"Erro ao excluir relatório: {e}")
+
+@receiver(pre_delete, sender=RelatorioEntradaSaida)
+def deletar_relatorio_saida(sender, instance, **kwargs):
+    try:     
+        relatorio = Saida.objects.get(id=instance.id_do_movimento)
+        relatorio.delete()
+    except Saida.DoesNotExist:
+        pass
+    except Exception as e:
+
+        print(f"Erro ao excluir relatório: {e}")
