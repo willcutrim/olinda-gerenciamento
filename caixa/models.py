@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from relatorios.models import RelatorioEntradaSaida
 
 class Carrinho(models.Model):
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, blank=True, null=True)
     status_entrada = models.CharField(max_length=120, default='entrada')
     produtos_nomes = models.CharField(max_length=200, blank=True)
     produtos_quantidades = models.CharField(max_length=200, blank=True)
@@ -54,6 +55,7 @@ class Carrinho(models.Model):
 def create_relatorio_entrada_saida(sender, instance, created, **kwargs):
     if created:
         RelatorioEntradaSaida.objects.create(
+            user=instance.user,
             id_do_movimento=instance.id,
             tipo=instance.status_entrada,
             descricao="Venda",

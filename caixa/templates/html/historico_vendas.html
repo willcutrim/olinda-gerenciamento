@@ -31,6 +31,7 @@
                             <th>Produtos</th>
                             <th>QTd. de peças</th>
                             <th>data da venda</th>
+                            <th>Responsável</th>
                             <th>Valor da venda</th>
                             {% if user.is_superuser == True %}
                             <th>AÇÕES</th>
@@ -44,6 +45,7 @@
                             <td>{{venda.produtos_nomes}}</td>
                             <td>{{venda.quantidade_produtos}}</td>
                             <td>{{venda.data_compra}}</td>
+                            <td>{{venda.user}}</td>
                             <td>{{venda.valor_da_compra}}</td>
                             {% if user.is_superuser == True %}
                             <td>

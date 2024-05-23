@@ -99,7 +99,7 @@ def atualizar_usuario(request, pk):
 
     return render(request, 'html/editar_usuario.html', {'form': form, 'user': user})
 
-
+@login_required(login_url="login")
 def deletar_usuario(request, pk):
     user = get_object_or_404(User, id=pk)
     if request.method == 'POST':

@@ -86,9 +86,10 @@ class PostFrenteCaixa(APIView):
             quantidades = serializer.validated_data.pop('quantidades', [])
             valores = serializer.validated_data.pop('valores', [])
             teste_calc = sum(i for i in quantidades)
-            print(teste_calc)
+            user = request.user
             carrinho = Carrinho.objects.create(
                 **serializer.validated_data,
+                user=user,
                 produtos_nomes=','.join(produtos),
                 quantidade_produtos=teste_calc,
                 produtos_valores=','.join(map(str, valores)),

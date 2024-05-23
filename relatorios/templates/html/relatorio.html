@@ -37,6 +37,7 @@
                             <th>ENTRADA <i class="fas fa-arrow-up text-success"></i> - SAIDA <i class="fas fa-arrow-down text-danger"></i></th>
                             <th>DESCRIÇÃO</th>
                             <th>DATA</th>
+                            <th>RESPONSÁVEL</th>
                             <th>VALOR</th>
                             {% if user.is_superuser == True %}
                             <th>AÇÕES</th>
@@ -49,6 +50,7 @@
                             <td><i class="fas {% if data_relatorio.tipo == 'entrada' %}fa-arrow-up text-success{% else %}fa-arrow-down text-danger{% endif %}"></i></td>
                             <td>{{data_relatorio.descricao|default:"-----"}}</td>
                             <td>{{data_relatorio.data_log_formatada}}</td>
+                            <td>{{data_relatorio.user}}</td>
                             <td>{{data_relatorio.valor}}</td>
                             {% if user.is_superuser == True %}
                             <td>

@@ -6,7 +6,7 @@ import caixa
 
 
 class Saida(models.Model):
-    user = models.CharField(max_length=120)
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, blank=True, null=True)
     saida_status = models.CharField(max_length=120, default='saida')
     tipo_de_despesa = models.CharField(
         max_length=150, 
@@ -29,6 +29,7 @@ class Saida(models.Model):
     
 
 class RelatorioEntradaSaida(models.Model):
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, blank=True, null=True)
     id_do_movimento = models.CharField(max_length=150)
     tipo = models.CharField(max_length=150)
     descricao = models.TextField(max_length=250)
@@ -41,11 +42,12 @@ class RelatorioEntradaSaida(models.Model):
     
     def data_log_formatada(self):
         return self.data.strftime('%d/%m/%Y - %H:%M')
-
+    
 @receiver(post_save, sender=Saida)
 def create_relatorio_entrada_saida(sender, instance, created, **kwargs):
     if created:
         RelatorioEntradaSaida.objects.create(
+            user=instance.user,
             id_do_movimento=instance.id,
             tipo=instance.saida_status,
             descricao=instance.descricao,
@@ -61,7 +63,7 @@ def deletar_relatorio_entrada(sender, instance, **kwargs):
         relatorio = caixa.models.Carrinho.objects.get(id=instance.id_do_movimento)
         relatorio.delete()
     except caixa.models.Carrinho.DoesNotExist:
-        pass
+        return 'Relatorio não encontrado'
     except Exception as e:
 
         print(f"Erro ao excluir relatório: {e}")
@@ -72,7 +74,7 @@ def deletar_relatorio_saida(sender, instance, **kwargs):
         relatorio = Saida.objects.get(id=instance.id_do_movimento)
         relatorio.delete()
     except Saida.DoesNotExist:
-        pass
+        return 'Relatório não encontrado'
     except Exception as e:
 
         print(f"Erro ao excluir relatório: {e}")
