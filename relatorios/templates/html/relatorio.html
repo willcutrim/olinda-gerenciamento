@@ -16,10 +16,19 @@
             <h6 class="m-0 font-weight-bold text-primary">Histórico de entradas e saídas</h6>
             <form method="get">
                 <div class="row">
-                    <div class="col-md-5">
+ 
+                    {% if url_full != 'http://127.0.0.1:8000/relatorio'%}
+                    <div class="col-md-2">
+                        <a class="btn btn-warning btn-circle" href="{% url 'relatorio' %}" title="Remover filtro">
+                            <i class="fas fa-calendar-minus text-white"></i>
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="col-md-4">
                         <input type="date" class="form-control" id="data_inicial" name="data_inicial" value="{{ data_inicial }}">
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <input type="date" class="form-control" id="data_final" name="data_final" value="{{ data_final }}">
                     </div>
                     <div class="col-md-2">
@@ -49,9 +58,9 @@
                         <tr>
                             <td><i class="fas {% if data_relatorio.tipo == 'entrada' %}fa-arrow-up text-success{% else %}fa-arrow-down text-danger{% endif %}"></i></td>
                             <td>{{data_relatorio.descricao|default:"-----"}}</td>
-                            <td>{{data_relatorio.data_log_formatada}}</td>
-                            <td>{{data_relatorio.user}}</td>
-                            <td>{{data_relatorio.valor}}</td>
+                            <td>{{data_relatorio.data_log_formatada|default_if_none:"-----"}}</td>
+                            <td>{{data_relatorio.user|default_if_none:"-----"}}</td>
+                            <td>{{data_relatorio.valor|default_if_none:"-----"}}</td>
                             {% if user.is_superuser == True %}
                             <td>
                                 <form action="{% url 'deletar-relatorio' data_relatorio.pk %}" method="post" class="d-inline" id="deleteForm{{ data_relatorio.id }}">{% csrf_token %}

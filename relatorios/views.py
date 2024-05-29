@@ -51,6 +51,7 @@ def relatorio(request):
     page_logs = paginator.get_page(page_number)
 
     context = {
+        'url_full': request.build_absolute_uri(),
         'logs': page_logs,
         'total_entradas': total_entradas or 0,
         'total_entradas_mensal': total_entradas_mensal or 0,
