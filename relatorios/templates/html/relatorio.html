@@ -72,29 +72,40 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <div class="pagination">
-                    <span class="step-links">
-                        {% if logs.has_previous %}
-                            <a href="?page=1">&laquo; Primeiro</a>
-                            <a href="?page={{ logs.previous_page_number }}">Voltar</a>
-                        {% endif %}
-                        <span class="current-page">
-                            Página {{ logs.number }} de {{ logs.num_pages }}
+                <div class="d-flex justify-content-between">
+                    <div class="pagination">
+                        <span class="step-links">
+                            {% if logs.has_previous %}
+                                <a href="?page=1">&laquo; Primeiro</a>
+                                <a href="?page={{ logs.previous_page_number }}">Voltar</a>
+                            {% endif %}
+                            <span class="current-page">
+                                Página {{ logs.number }} de {{ logs.num_pages }}
+                            </span>
+                            <span class="current-page">{{ logs.number }}</span>
+                            
+                            {% if logs.has_next %}
+                                <a href="?page={{ logs.next_page_number }}">próximo</a>
+                                <a href="?page={{ logs.paginator.num_pages }}">Ultimo &raquo;</a>
+                            {% endif %}
                         </span>
-                        <span class="current-page">{{ logs.number }}</span>
-                        
-                        {% if logs.has_next %}
-                            <a href="?page={{ logs.next_page_number }}">próximo</a>
-                            <a href="?page={{ logs.paginator.num_pages }}">Ultimo &raquo;</a>
-                        {% endif %}
-                    </span>
-                </div>                
+                    </div>  
+                    
+                <div>
+                    <div class="badge rounded-pill bg-success p-2">
+                        Entrada Mensal: R$ {{total_entradas_mensal}}
+                    </div>
+                    <div class="badge rounded-pill bg-danger p-2">
+                        Saida Mensal: R$ {{total_saidas_mensal}}
+                    </div>
+                </div>
+            </div>             
             </div>
         </div>
     </div>
    <div class="row">
         <div class="col-xl-6 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
@@ -126,7 +137,7 @@
             </div>
         </div>
         <div class="col-xl-6 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">

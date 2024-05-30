@@ -25,7 +25,7 @@
             </div>
             <div class="col">
                 <button class="btn btn-success" type="button" id="add-product">
-                    <i class="fas fa-fw fa-plus"></i> Adicionar Produto
+                    <i class="fas fa-fw fa-plus"></i> Adicionar ao carrinho
                 </button>
             </div>
         </div>
@@ -50,23 +50,15 @@
             </div>
         </div>
     </div>
-    <div class="d-flex justify-content-end p-2" id="total-value">
-        <span class="badge rounded-pill bg-success">Valor Total: R$ 0.00</span>
-        
+    <div class="d-flex justify-content-between p-2" id="total-value">
+        <button class="btn btn-primary" type="button" id="submit-form">Finalizar pedido</button>
+        <span class="badge rounded-pill bg-success p-3">Valor Total: R$ 0.00</span>
     </div>
-    <button class="btn btn-primary" type="button" id="submit-form">Finalizar pedido</button>
 </form>
 <script src="{% static 'jquery/jquery.min.js'%}"></script>
 <script src="{% static 'bootstrap/js/sweetalert2@11.js' %}"></script>
 <script src="{% static 'bootstrap/js/sweetalert2.all.min.js'%}"></script>
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script>
     
     $(document).ready(function() {
@@ -156,42 +148,54 @@
         dataToSend.valorTotal = valorTotal;
         
         var apiUrl = 'post-caixa';
-    
-        $.ajax({
-            url: apiUrl,
-            type: 'POST',
-            contentType: 'application/json',
-            headers: {
-                'X-CSRFToken': getCSRFToken(),
-            },
-            data: JSON.stringify(dataToSend),
-            success: function(response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Registros salvos com sucesso!',
-                    timer: 2000,
-                    showConfirmButton: false,
-                }).then(function() {
+      
+        if(valorTotal != 0){
+            $.ajax({
+                url: apiUrl,
+                type: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                },
+                data: JSON.stringify(dataToSend),
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Registros salvos com sucesso!',
+                        timer: 2000,
+                        showConfirmButton: false,
+                    }).then(function() {
+                        location.reload();
+                    });
+        
+                    $('#product-table-body').empty();
+                    // updateTotal();
+                },
+                error: function(error) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Registros salvos com sucesso!',
+                        timer: 2000,
+                        showConfirmButton: false,
+                    }).then(function() {
                     location.reload();
-                });
-    
-                $('#product-table-body').empty();
-                // updateTotal();
-            },
-            error: function(error) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Registros salvos com sucesso!',
-                    timer: 2000,
-                    showConfirmButton: false,
-                }).then(function() {
-                   location.reload();
-                });
+                    });
+                    
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Atenção!',
+                text: 'Carrinho vazio!',
+                timer: 2000,
+                showConfirmButton: false,
+            }).then(function() {
                 
-            }
-        });
+            });
+        }
     });
     
     
