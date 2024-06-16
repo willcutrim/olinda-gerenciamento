@@ -55,9 +55,10 @@
         <span class="badge rounded-pill bg-success p-3">Valor Total: R$ 0.00</span>
     </div>
 </form>
-<script src="{% static 'jquery/jquery.min.js'%}"></script>
-<script src="{% static 'bootstrap/js/sweetalert2@11.js' %}"></script>
-<script src="{% static 'bootstrap/js/sweetalert2.all.min.js'%}"></script>
+
+<script src="{% static 'js/sweetalert2.all.min.js'%}"></script>
+<script src="{% static 'js/sweetalert2@11.js' %}"></script>
+<script src="{% static "jquery/jquery.min.js"%}"></script>
 
 <script>
     
@@ -150,41 +151,46 @@
         var apiUrl = 'post-caixa';
       
         if(valorTotal != 0){
-            $.ajax({
-                url: apiUrl,
-                type: 'POST',
-                contentType: 'application/json',
+            fetch(apiUrl, {
+                method: 'POST',
                 headers: {
+                    'Content-Type': 'application/json',
                     'X-CSRFToken': getCSRFToken(),
                 },
-                data: JSON.stringify(dataToSend),
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: 'Registros salvos com sucesso!',
-                        timer: 2000,
-                        showConfirmButton: false,
-                    }).then(function() {
-                        location.reload();
-                    });
-        
-                    $('#product-table-body').empty();
-                    // updateTotal();
-                },
-                error: function(error) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: 'Registros salvos com sucesso!',
-                        timer: 2000,
-                        showConfirmButton: false,
-                    }).then(function() {
-                    location.reload();
-                    });
-                    
+                body: JSON.stringify(dataToSend),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
+                return response.json();
+            })
+            .then(data => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Registros salvos com sucesso!',
+                    timer: 2000,
+                    showConfirmButton: false,
+                }).then(() => {
+                    location.reload();
+                });
+            
+                document.getElementById('product-table-body').innerHTML = '';
+                // updateTotal();
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Registros salvos com sucesso!',
+                    timer: 2000,
+                    showConfirmButton: false,
+                }).then(() => {
+                    location.reload();
+                });
             });
+            
         } else {
             Swal.fire({
                 icon: 'warning',
@@ -198,32 +204,33 @@
         }
     });
     
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        document.getElementById("product-name").addEventListener("change", function() {
+            var selectedProduct = this.value;
     
-        $(document).ready(function() {
-            
-            $("#product-name").on("change", function() {
-                var selectedProduct = $(this).val();
-        
-                $.ajax({
-                    url: '/get-price/',
-                    type: 'GET',
-                    data: {
-                        product: selectedProduct
-                    },
-                    success: function(data) {
-                        $("#product-value").val(data.preco);
-                    },
-                    error: function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/get-price/?product=" + selectedProduct, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        document.getElementById("product-value").value = data.preco;
+                    } else {
                         console.log("Error fetching product price");
                     }
-                });
-            });
+                }
+            };
+            xhr.send();
         });
+    });
+    
         
-        function getCSRFToken() {
-            const cookieValue = document.cookie.split(';').find(row => row.startsWith('csrftoken=')).split('=')[1];
-            return cookieValue;
-        }
+    function getCSRFToken() {
+        const cookieValue = document.cookie.split(';').find(row => row.startsWith('csrftoken=')).split('=')[1];
+        return cookieValue;
+    }
     
 </script>
 {% endblock %}

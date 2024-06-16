@@ -80,13 +80,26 @@ def get_product_price(request):
 class PostFrenteCaixa(APIView):
     def post(self, request):
         serializer = CarrinhoSerializer(data=request.data)
-        print(request.data)
+
         if serializer.is_valid():
             produtos = serializer.validated_data.pop('produtos', [])
             quantidades = serializer.validated_data.pop('quantidades', [])
             valores = serializer.validated_data.pop('valores', [])
             teste_calc = sum(i for i in quantidades)
             user = request.user
+
+            for index, produto_nome in enumerate(request.data['produtos']):
+                quantidade_comprada = request.data['quantidades'][index]
+                
+                produto = Produto.objects.filter(nome=produto_nome).first()
+                
+                if produto:
+                    produto.quantidade_estoque -= quantidade_comprada
+                    produto.save()
+                    print(f'O produto: {produto.nome}, nova quantidade em estoque: {produto.quantidade_estoque}')
+                else:
+                    print(f'Produto {produto_nome} não encontrado')
+
             carrinho = Carrinho.objects.create(
                 **serializer.validated_data,
                 user=user,
@@ -96,7 +109,7 @@ class PostFrenteCaixa(APIView):
                 valor_da_compra=request.data['valorTotal'],
             )
             response_serializer = CarrinhoSerializer(carrinho)
-            print(response_serializer.data)
+            # print(carrinho)
             return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -41,7 +41,7 @@
     </div>
 </div>
 <script src="{% static "jquery/jquery.min.js"%}"></script>
-<script src="{% static "js/sweetalert2@11"%}"></script>
+<script src="{% static "js/sweetalert2@11.js"%}"></script>
 <script src="{% static "js/sweetalert2.all.min.js"%}"></script>
 <script>
 
@@ -77,32 +77,36 @@
         });
     }
 
-    $(document).ready(function () {
-        $('#product-form').submit(function (e) {
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('product-form').addEventListener('submit', function(e) {
             e.preventDefault();
-
-            $.ajax({
-                type: 'POST',
-                url: '{% url "cadastro-produto" %}',
-                data: $('#product-form').serialize(),
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Produto cadastrado com sucesso!',
-                            timer: 2000,
-                            showConfirmButton: false,
-                        }).then(function () {
-                            location.reload();
-                        });
-                    }
-                },
-                error: function (error) {
-                    console.log(error);
+    
+            const form = document.getElementById('product-form');
+            const formData = new FormData(form);
+    
+            fetch('{% url "cadastro-produto" %}', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            })
+            .then(response => response.json())
+            .then(response => {
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Produto cadastrado com sucesso!',
+                        timer: 2000,
+                        showConfirmButton: false,
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
         });
     });
+    
 </script>
 {% endblock %}

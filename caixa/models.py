@@ -3,6 +3,7 @@ from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
 from relatorios.models import RelatorioEntradaSaida
+from produtos.models import Produto
 
 class Carrinho(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE, blank=True, null=True)
@@ -74,3 +75,19 @@ def deletar_relatorio_entrada(sender, instance, **kwargs):
     except Exception as e:
         #
         print(f"Erro ao excluir relatório: {e}")
+
+
+@receiver(post_save, sender=Carrinho)
+def update_estoque(sender, instance, **kwargs):
+    try:
+        for nome_produto, quantidade, valor in zip(instance.produtos_nomes.split(', '), instance.produtos_quantidades.split(', '), instance.produtos_valores.split(', ')):
+            produto = Produto.objects.get(nome=nome_produto)
+            if instance.status_entrada == 'entrada':
+                produto.quantidade_estoque -= int(quantidade)
+                produto.save()
+            else:
+                produto.quantidade_estoque -= int(quantidade)
+                produto.save()
+    except Exception as e:
+        #
+        print(f"Erro ao atualizar estoque: {e}")

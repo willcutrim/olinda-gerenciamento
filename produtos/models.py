@@ -18,6 +18,7 @@ class Produto(models.Model):
     nome = models.CharField(max_length=100, verbose_name="Nome do Produto*")
     descricao = models.TextField(null=True, blank=True, verbose_name="Descrição")
     categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, null=True, blank=True)
+    quantidade_estoque = models.IntegerField(null=True, blank=True, verbose_name="Quantidade em Estoque")
     preco = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Preço*")
     tamanho = models.CharField(max_length=10, null=True, blank=True, verbose_name="Tamanho")
     cor = models.CharField(max_length=50, null=True, blank=True, verbose_name="Cor")
